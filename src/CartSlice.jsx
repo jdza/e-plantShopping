@@ -1,37 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const CartSlice = createSlice({
+export const CreatSlice = createSlice({
   name: 'cart',
   initialState: {
     items: [], // Initialize items as an empty array
+    totalQuantity: 0,
   },
   reducers: {
-    // Adds a new plant item to the cart
     addItem: (state, action) => {
-      const existingItem = state.items.find(item => item.name === action.payload.name);
-      if (!existingItem) {
-        state.items.push({...action.payload, quantity: 1});
-      } else {
-        existingItem.quantity += 1;
-      }
+      state.items.push(action.payload);
+      state.totalQuantity += action.payload.quantity;
     },
-    // Removes an item from the cart based on its name
     removeItem: (state, action) => {
-      const index = state.items.findIndex(item => item.name === action.payload);
+      const index = state.items.findIndex(item => item.name === action.payload.name);
       if (index !== -1) {
+        state.totalQuantity -= state.items[index].quantity;
         state.items.splice(index, 1);
       }
     },
-    // Updates the quantity of an existing item in the cart
     updateQuantity: (state, action) => {
       const item = state.items.find(item => item.name === action.payload.name);
       if (item) {
+        state.totalQuantity += (action.payload.quantity - item.quantity);
         item.quantity = action.payload.quantity;
       }
     },
   },
 });
 
-export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
+export const { addItem, removeItem, updateQuantity } = CreatSlice.actions;
 
-export default CartSlice.reducer;
+export default CreatSlice.reducer;
